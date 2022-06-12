@@ -1,0 +1,26 @@
+{
+  "name": "@juancruzagb/src",
+  "version": "1.0.0",
+  "description": "Juan Cruz Armentia Gonzalez Borda packages source",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JuanCruzAGB/Source.git"
+  },
+  "keywords": [
+    "JuanCruzAGB",
+    "Javascript",
+    "Source",
+    "src"
+  ],
+  "author": "JuanCruzAGB",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JuanCruzAGB/Source/issues"
+  },
+  "homepage": "https://github.com/JuanCruzAGB/Source#readme"
+}
