@@ -1,52 +1,18 @@
 /**
- * * Controls a callback class object.
+ * * Controls the Callback methods.
  * @export
- * @class Callback
+ * @class Methods
+ * @author JuanCruzAGB <juan.cruz.armentia@gmail.com>
  */
-export default class Callback {
-    /**
-     * * Set a callback.
-     * @param {object|string} name
-     * @param {object} [value=null]
-     * @param {function} [value.function]
-     * @param {object} [value.params]
-     * @throws {Error}
-     * @returns
-     */
-    add(name = {}, value = null) {
-        if (!name) throw new Error('Callback name is required');
-
-        if (name instanceof Object) {
-            for (const callbackName in name) {
-                if (Object.hasOwnProperty.call(name, callbackName)) this.add(callbackName, name[callbackName]);
-            }
-
-            return;
-        }
-
-        this[name] = {
-            ...value,
-            /**
-             * * Executes a the callback.
-             * @param {object} [params={}]
-             * @memberof Class.callbacks
-             */
-            execute(params = {}) {
-                this.function({
-                    ...this.params,
-                    ...params,
-                });
-            },
-        };
-    }
-
+export default class Methods {
     /**
      * * Executes a Class callback.
      * @param {string} name
      * @param {object} [params={}]
      * @throws {Error}
+     * @memberof Methods
      */
-    execute(name, params = {}) {
+    execute (name, params = {}) {
         if (typeof name != 'string') throw new Error('Callback name is required');
 
         if (!this.has(name)) throw new Error('Callback does not exist');
@@ -58,12 +24,13 @@ export default class Callback {
     }
 
     /**
-     * * Check if there is a callback.
+     * * Check if there is a Callback.
      * @param {string} name
      * @throws {Error}
      * @returns {boolean}
+     * @memberof Methods
      */
-    has(name) {
+    has (name) {
         if (name == undefined) throw new Error('Callback name is required');
 
         if (typeof name != 'string') throw new Error('Callback name must be a string');
@@ -72,15 +39,52 @@ export default class Callback {
     }
 
     /**
-     * * Remove a callback.
+     * * Remove a Callback.
      * @param {string} name
      * @throws {Error}
+     * @memberof Methods
      */
-    remove(name) {
+    remove (name) {
         if (name == undefined) throw new Error('Callback name is required');
 
         if (this.has(name)) throw new Error('Callback does not exist');
 
         delete this[name];
+    }
+
+    /**
+     * * Set a Callback.
+     * @param {object|string} name
+     * @param {object} [value=null]
+     * @param {function} [value.function]
+     * @param {object} [value.params]
+     * @throws {Error}
+     * @returns
+     * @memberof Methods
+     */
+    set (name = {}, value = null) {
+        if (!name) throw new Error('Callback name is required');
+
+        if (name instanceof Object) {
+            for (const callbackName in name) {
+                if (Object.hasOwnProperty.call(name, callbackName)) this.set(callbackName, name[callbackName]);
+            }
+
+            return;
+        }
+
+        this[name] = {
+            ...value,
+            /**
+             * * Executes a the callback.
+             * @param {object} [params={}]
+             */
+            execute (params = {}) {
+                this.function({
+                    ...this.params,
+                    ...params,
+                });
+            },
+        };
     }
 }

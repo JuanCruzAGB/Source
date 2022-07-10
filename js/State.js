@@ -1,37 +1,18 @@
 /**
- * * Controls a state class object.
+ * * Controls the State methods.
  * @export
- * @class State
+ * @class Methods
+ * @author JuanCruzAGB <juan.cruz.armentia@gmail.com>
  */
-export default class State {
+export default class Methods {
     /**
-     * * Set a state.
-     * @param {object|string} name
-     * @param {*} [value=null]
-     * @throws {Error}
-     * @returns
-     */
-    add(name = {}, value = null) {
-        if (!name) throw new Error('State name is required');
-
-        if (name instanceof Object) {
-            for (const stateName in name) {
-                if (Object.hasOwnState.call(name, stateName)) this.add(stateName, name[stateName]);
-            }
-
-            return;
-        }
-
-        this[name] = value;
-    }
-
-    /**
-     * * Check if there is a state.
+     * * Check if there is a State.
      * @param {string} name
      * @throws {Error}
      * @returns {boolean}
+     * @memberof Methods
      */
-    has(name) {
+    has (name) {
         if (name == undefined) throw new Error('State name is required');
 
         if (typeof name != 'string') throw new Error('State name must be a string');
@@ -40,15 +21,38 @@ export default class State {
     }
 
     /**
-     * * Remove a state.
+     * * Remove a State.
      * @param {string} name
      * @throws {Error}
+     * @memberof Methods
      */
-    remove(name) {
+    remove (name) {
         if (name == undefined) throw new Error('State name is required');
     
         if (this.has(name)) throw new Error('State does not exist');
     
         delete this[name];
+    }
+
+    /**
+     * * Set a State.
+     * @param {object|string} name
+     * @param {*} [value=null]
+     * @throws {Error}
+     * @returns
+     * @memberof Methods
+     */
+    set (name = {}, value = null) {
+        if (!name) throw new Error('State name is required');
+
+        if (name instanceof Object) {
+            for (const stateName in name) {
+                if (Object.hasOwnState.call(name, stateName)) this.set(stateName, name[stateName]);
+            }
+
+            return;
+        }
+
+        this[name] = value;
     }
 }
