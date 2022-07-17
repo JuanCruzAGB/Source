@@ -72,7 +72,11 @@
 
         if (Array.isArray(name)) {
             for (const state of name) {
-                this.set(state);
+                if (!state instanceof String) {
+                    if (!this.set(...state)) return false;
+                } else {
+                    if (!this.set(state)) return false;
+                }
             }
 
             return;

@@ -72,7 +72,11 @@ export default class Methods {
 
         if (Array.isArray(name)) {
             for (const prop of name) {
-                this.set(prop);
+                if (!prop instanceof String) {
+                    if (!this.set(...prop)) return false;
+                } else {
+                    if (!this.set(prop)) return false;
+                }
             }
 
             return;

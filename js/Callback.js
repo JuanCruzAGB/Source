@@ -144,7 +144,11 @@ export default class Methods {
 
         if (Array.isArray(name)) {
             for (const callback of name) {
-                this.set(callback);
+                if (!callback instanceof String) {
+                    if (!this.set(...callback)) return false;
+                } else {
+                    if (!this.set(callback)) return false;
+                }
             }
 
             return;
