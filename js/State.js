@@ -4,20 +4,31 @@
  * @class Methods
  * @author JuanCruzAGB <juan.cruz.armentia@gmail.com>
  */
-export default class Methods {
+ export default class Methods {
     /**
      * * Check if there is a State.
-     * @param {string} name
+     * @param {array|string} name
+     * @param {*} [value]
      * @throws {Error}
      * @returns {boolean}
      * @memberof Methods
      */
-    has (name) {
+    has (name, value) {
         if (name == undefined) throw new Error('State name is required');
 
-        if (typeof name != 'string') throw new Error('State name must be a string');
+        if (Array.isArray(name)) {
+            for (const state of name) {
+                if (!this.has(state)) return false;
+            }
 
-        return this.hasOwnState(name);
+            return true;
+        }
+
+        if (name instanceof String) throw new Error('State name must be a string');
+
+        if (value != undefined) return this.hasOwnProperty(name) && this[name] == value;
+
+        return this.hasOwnProperty(name);
     }
 
     /**
@@ -28,26 +39,42 @@ export default class Methods {
      */
     remove (name) {
         if (name == undefined) throw new Error('State name is required');
-    
+
+        if (Array.isArray(name)) {
+            for (const state of name) {
+                this.remove(state);
+            }
+
+            return;
+        }
+
+        if (name instanceof String) throw new Error('State name must be a string');
+
         if (this.has(name)) throw new Error('State does not exist');
-    
+
         delete this[name];
     }
 
     /**
      * * Set a State.
-     * @param {object|string} name
-     * @param {*} [value=null]
+     * @param {array|object|string} name
+     * @param {*} [value=false]
      * @throws {Error}
      * @returns
      * @memberof Methods
      */
-    set (name = {}, value = null) {
+    set (name, value = false) {
         if (!name) throw new Error('State name is required');
 
-        if (name instanceof Object) {
+        if (Array.isArray(name)) {
+            for (const state of name) {
+                this.set(state);
+            }
+
+            return;
+        } else if (name instanceof Object) {
             for (const stateName in name) {
-                if (Object.hasOwnState.call(name, stateName)) this.set(stateName, name[stateName]);
+                if (Object.hasOwnProperty.call(name, stateName)) this.set(stateName, name[stateName]);
             }
 
             return;

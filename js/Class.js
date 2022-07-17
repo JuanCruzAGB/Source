@@ -22,26 +22,24 @@ export default class Class {
         state: {},
     }) {
         this.props.add((data && data.hasOwnProperty('props')) ? data.props : {});
-
         this.state.add((data && data.hasOwnProperty('state')) ? data.state : {});
-
         this.callbacks.add((data && data.hasOwnProperty('callbacks')) ? data.callbacks : {});
     }
 
     /**
-     * * Callbacks.
+     * @var {Callback} callbacks
      * @memberof Class
      */
     callbacks = Callback
 
     /**
-     * * Properties.
+     * @var {Property} props
      * @memberof Class
      */
     props = Property
 
     /**
-     * * State.
+     * @var {State} state
      * @memberof Class
      */
     state = State

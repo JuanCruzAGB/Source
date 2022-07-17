@@ -1,3 +1,61 @@
+// ? JuanCruzAGB repository
+import Class from "@juancruzagb/src";
+
+/**
+ * * Controls an Callback object.
+ * @export
+ * @class Callback
+ * @extends Class
+ * @author JuanCruzAGB <juan.cruz.armentia@gmail.com>
+ */
+export class Callback extends Class {
+    /**
+     * * Creates an instance of Callback.
+     * @param {object} [data]
+     * @param {object} [data.props]
+     * @param {string} [data.props.function]
+     * @param {object} [data.props.params={}]
+     * @memberof Callback
+     */
+    constructor (data = {
+        props: {
+            function: params => { /* console.log(params) */ },
+            params: {},
+        },
+    }) {
+        super({
+            props: {
+                ...Callback.props,
+                ...(data && data.hasOwnProperty('props')) ? data.props : {},
+            },
+        });
+    }
+
+    /**
+     * * Executes a the callback.
+     * @param {object} [params={}]
+     */
+    execute (params = {}) {
+        this.props.function({
+            ...this.params,
+            ...params,
+        });
+    }
+
+    /**
+     * * Default properties.
+     * @static
+     * @var {object} props
+     * @param {function} props.function
+     * @param {object} props.params
+     * @memberof Callback
+     */
+    static props = {
+        function: params => { /* console.log(params) */ },
+        params: {},
+    }
+}
+
 /**
  * * Controls the Callback methods.
  * @export
@@ -13,19 +71,20 @@ export default class Methods {
      * @memberof Methods
      */
     execute (name, params = {}) {
-        if (typeof name != 'string') throw new Error('Callback name is required');
+        if (!name) throw new Error('Callback name is required');
+
+        if (name instanceof String) throw new Error('Callback name must be a string');
 
         if (!this.has(name)) throw new Error('Callback does not exist');
 
-        this[name].function({
-            ...this[name].params,
+        this[name].execute({
             ...params,
         });
     }
 
     /**
      * * Check if there is a Callback.
-     * @param {string} name
+     * @param {array|string} name
      * @throws {Error}
      * @returns {boolean}
      * @memberof Methods
@@ -33,7 +92,15 @@ export default class Methods {
     has (name) {
         if (name == undefined) throw new Error('Callback name is required');
 
-        if (typeof name != 'string') throw new Error('Callback name must be a string');
+        if (Array.isArray(name)) {
+            for (const callback of name) {
+                if (!this.has(callback)) return false;
+            }
+
+            return true;
+        }
+
+        if (name instanceof String) throw new Error('Callback name must be a string');
 
         return this.hasOwnProperty(name);
     }
@@ -47,6 +114,16 @@ export default class Methods {
     remove (name) {
         if (name == undefined) throw new Error('Callback name is required');
 
+        if (Array.isArray(name)) {
+            for (const callback of name) {
+                this.remove(callback);
+            }
+
+            return;
+        }
+
+        if (name instanceof String) throw new Error('Callback name must be a string');
+
         if (this.has(name)) throw new Error('Callback does not exist');
 
         delete this[name];
@@ -54,7 +131,7 @@ export default class Methods {
 
     /**
      * * Set a Callback.
-     * @param {object|string} name
+     * @param {array|object|string} name
      * @param {object} [value=null]
      * @param {function} [value.function]
      * @param {object} [value.params]
@@ -62,10 +139,16 @@ export default class Methods {
      * @returns
      * @memberof Methods
      */
-    set (name = {}, value = null) {
+    set (name, value = null) {
         if (!name) throw new Error('Callback name is required');
 
-        if (name instanceof Object) {
+        if (Array.isArray(name)) {
+            for (const callback of name) {
+                this.set(callback);
+            }
+
+            return;
+        } else if (name instanceof Object) {
             for (const callbackName in name) {
                 if (Object.hasOwnProperty.call(name, callbackName)) this.set(callbackName, name[callbackName]);
             }
@@ -73,18 +156,6 @@ export default class Methods {
             return;
         }
 
-        this[name] = {
-            ...value,
-            /**
-             * * Executes a the callback.
-             * @param {object} [params={}]
-             */
-            execute (params = {}) {
-                this.function({
-                    ...this.params,
-                    ...params,
-                });
-            },
-        };
+        this[name] = new Callback(value);
     }
 }
