@@ -8,22 +8,29 @@ export default class Methods {
     /**
      * * Check if there is a Property.
      * @param {array|string} name
+     * @param {*} [value]
      * @throws {Error}
      * @returns {boolean}
      * @memberof Methods
      */
-    has (name) {
+    has (name, value) {
         if (name == undefined) throw new Error('Property name is required');
 
         if (Array.isArray(name)) {
             for (const prop of name) {
-                if (!this.has(prop)) return false;
+                if (!prop instanceof String) {
+                    if (!this.has(...prop)) return false;
+                } else {
+                    if (!this.has(prop)) return false;
+                }
             }
 
             return true;
         }
 
-        if (name instanceof String) throw new Error('Property name must be a string');
+        if (!name instanceof String) throw new Error('Property name must be a string');
+
+        if (value != undefined) return this.hasOwnProperty(name) && this[name] == value;
 
         return this.hasOwnProperty(name);
     }
@@ -45,7 +52,7 @@ export default class Methods {
             return;
         }
 
-        if (name instanceof String) throw new Error('Property name must be a string');
+        if (!name instanceof String) throw new Error('Property name must be a string');
 
         if (this.has(name)) throw new Error('Property does not exist');
 

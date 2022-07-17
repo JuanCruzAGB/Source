@@ -18,13 +18,17 @@
 
         if (Array.isArray(name)) {
             for (const state of name) {
-                if (!this.has(state)) return false;
+                if (!state instanceof String) {
+                    if (!this.has(...state)) return false;
+                } else {
+                    if (!this.has(state)) return false;
+                }
             }
 
             return true;
         }
 
-        if (name instanceof String) throw new Error('State name must be a string');
+        if (!name instanceof String) throw new Error('State name must be a string');
 
         if (value != undefined) return this.hasOwnProperty(name) && this[name] == value;
 
@@ -48,7 +52,7 @@
             return;
         }
 
-        if (name instanceof String) throw new Error('State name must be a string');
+        if (!name instanceof String) throw new Error('State name must be a string');
 
         if (this.has(name)) throw new Error('State does not exist');
 

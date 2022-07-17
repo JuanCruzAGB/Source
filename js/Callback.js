@@ -73,7 +73,7 @@ export default class Methods {
     execute (name, params = {}) {
         if (!name) throw new Error('Callback name is required');
 
-        if (name instanceof String) throw new Error('Callback name must be a string');
+        if (!name instanceof String) throw new Error('Callback name must be a string');
 
         if (!this.has(name)) throw new Error('Callback does not exist');
 
@@ -100,7 +100,7 @@ export default class Methods {
             return true;
         }
 
-        if (name instanceof String) throw new Error('Callback name must be a string');
+        if (!name instanceof String) throw new Error('Callback name must be a string');
 
         return this.hasOwnProperty(name);
     }
@@ -122,7 +122,7 @@ export default class Methods {
             return;
         }
 
-        if (name instanceof String) throw new Error('Callback name must be a string');
+        if (!name instanceof String) throw new Error('Callback name must be a string');
 
         if (this.has(name)) throw new Error('Callback does not exist');
 
