@@ -24,7 +24,7 @@ Además contiene proveedores de servicio, tales como: **URL**
 ### Class
 Object de **JavaScript** por defecto, parecido a un componente de **React**.
 ```
-import Class from "@juancruzagb/src/js/Class.js";
+import Class from "@juancruzagb/src";
 
 class Human extends Class {
     constructor (data = {}) {
@@ -45,10 +45,11 @@ let human = new Human({
 ##### Properties
  - **add**
 ```
+human.props.add('name', 'Pepe');
 human.props.add({
     name: 'Pepe',
 });
-human.props.add('name', 'Pepe');
+human.props.add([ 'age', { name: 'Pepe', }, ]);
 ```
 > Establece una propiedad a la Clase.
 
@@ -56,6 +57,8 @@ human.props.add('name', 'Pepe');
 ```
 human.props.has('name'); // true
 human.props.has('age'); // false
+human.props.has('name', 'Pepe'); // true
+human.props.has('name', 'Jorge'); // false
 ```
 > Devuelve si la Clase tiene o no una propiedad. Retornando **boolean**.
 
@@ -67,10 +70,11 @@ human.props.remove('name');
 ##### State
  - **add**
 ```
+human.state.add('working', false);
 human.state.add({
     working: false,
 });
-human.state.add('working', false);
+human.state.add([ 'working', { playing: 'football', }, ]);
 ```
 > Establece un estado a la Clase.
 
@@ -78,6 +82,8 @@ human.state.add('working', false);
 ```
 human.state.has('working'); // true
 human.state.has('sleeping'); // false
+human.state.has('working', false); // true
+human.state.has('working', true); // false
 ```
 > Devuelve si la Clase tiene o no un estado. Retornando **boolean**.
 
@@ -90,16 +96,23 @@ human.state.remove('working');
 ##### Callbacks
  - **add**
 ```
+human.callbacks.add('work', {
+    function: params => { /* Do something */ },
+    params: {},
+});
 human.callbacks.add({
     work: {
-        function: (params = {}) => { /* Do something */ },
+        function: params => { /* Do something */ },
         params: {},
     },
 });
-human.callbacks.add('work', {
-    function: (params = {}) => { /* Do something */ },
-    params: {},
-});
+human.callbacks.add([
+    'work', 
+    play: {
+        function: params => { /* Do something */ },
+        params: {},
+    },
+]);
 ```
 > Establece una función callback a la Clase.
 
@@ -124,20 +137,6 @@ human.callbacks.execute('work', {
 });
 ```
 > Ejecuta la funcion callback de la Clase, se puede enviar un objeto a la funcion como segundo parametro
-
-##### Html
- - **set**
-```
-human.html.set(document.body);
-human.html.set('html body');
-```
-> Establece un elemento HTML a la CLase
-
- - **remove**
-```
-human.html.remove();
-```
-> Remueve un elemento HTML a la Clase.
 
 ### URL
 Provee varios metodos propios del mismo window location href.

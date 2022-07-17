@@ -24,7 +24,7 @@ Also gives service providers like: **URL**
 ### Class
 Default **JavaScript** object, looks like a **React** component.
 ```
-import Class from "@juancruzagb/src/js/Class.js";
+import Class from "@juancruzagb/src";
 
 class Human extends Class {
     constructor (data = {}) {
@@ -45,10 +45,11 @@ let human = new Human({
 ##### Properties
  - **add**
 ```
+human.props.add('name', 'Pepe');
 human.props.add({
     name: 'Pepe',
 });
-human.props.add('name', 'Pepe');
+human.props.add([ 'age', { name: 'Pepe', }, ]);
 ```
 > Set a Class property
 
@@ -56,6 +57,8 @@ human.props.add('name', 'Pepe');
 ```
 human.props.has('name'); // true
 human.props.has('age'); // false
+human.props.has('name', 'Pepe'); // true
+human.props.has('name', 'Jorge'); // false
 ```
 > Returns if the Class has a prop. Returns **boolean**
 
@@ -66,10 +69,11 @@ human.props.remove('name');
 ##### State
  - **add**
 ```
+human.state.add('working', false);
 human.state.add({
     working: false,
 });
-human.state.add('working', false);
+human.state.add([ 'working', { playing: 'football', }, ]);
 ```
 > Set a Class state
 
@@ -77,6 +81,8 @@ human.state.add('working', false);
 ```
 human.state.has('working'); // true
 human.state.has('sleeping'); // false
+human.state.has('working', false); // true
+human.state.has('working', true); // false
 ```
 > Returns if the Class has a state. Returns **boolean**
 
@@ -88,16 +94,23 @@ human.state.remove('working');
 ##### Callbacks
  - **add**
 ```
+human.callbacks.add('work', {
+    function: params => { /* Do something */ },
+    params: {},
+});
 human.callbacks.add({
     work: {
-        function: (params = {}) => { /* Do something */ },
+        function: params => { /* Do something */ },
         params: {},
     },
 });
-human.callbacks.add('work', {
-    function: (params = {}) => { /* Do something */ },
-    params: {},
-});
+human.callbacks.add([
+    'work', 
+    play: {
+        function: params => { /* Do something */ },
+        params: {},
+    },
+]);
 ```
 > Set a Class callback
 
@@ -121,19 +134,6 @@ human.callbacks.execute('work', {
 });
 ```
 > Run a Class callback, you can send an object to the function as second param
-
-##### Html
- - **set**
-```
-human.html.set(document.body);
-human.html.set('html body');
-```
-> Set a Class HTML Node Element
-
- - **remove**
-```
-human.html.remove();
-```
 
 ### URL
 Provides a window location href methods.
