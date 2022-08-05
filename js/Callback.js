@@ -1,5 +1,5 @@
 // ? JuanCruzAGB repository
-import Class from "@juancruzagb/src";
+import Class from "@juancruzagb/src/js/Class.js";
 
 /**
  * * Controls an Callback object.
@@ -25,7 +25,7 @@ export class Callback extends Class {
     }) {
         super({
             props: {
-                ...Callback.props,
+                ...Callback.props(),
                 ...(data && data.hasOwnProperty('props')) ? data.props : {},
             },
         });
@@ -43,16 +43,16 @@ export class Callback extends Class {
     }
 
     /**
-     * * Default properties.
+     * * Returns default properties.
      * @static
-     * @var {object} props
-     * @param {function} props.function
-     * @param {object} props.params
+     * @return {object}
      * @memberof Callback
      */
-    static props = {
-        function: params => { /* console.log(params) */ },
-        params: {},
+    static props () {
+        return {
+            function: params => { /* console.log(params) */ },
+            params: {},
+        };
     }
 }
 
@@ -64,7 +64,35 @@ export class Callback extends Class {
  */
 export default class Methods {
     /**
-     * * Executes a Class callback.
+     * * Add a Callback.
+     * @param {array|object|string} name
+     * @param {object} [value=null]
+     * @param {function} [value.function]
+     * @param {object} [value.params]
+     * @throws {Error}
+     * @returns
+     * @memberof Methods
+     */
+    add (name, value = null) {
+        if (!name) throw new Error('Callback name is required');
+
+        if (Array.isArray(name)) {
+            for (const callback of name) this.add(callback);
+
+            return;
+        } else if (name instanceof Object) {
+            for (const callbackName in name) {
+                if (Object.hasOwnProperty.call(name, callbackName)) this.add(callbackName, name[callbackName]);
+            }
+
+            return;
+        }
+
+        this[name] = new Callback(value);
+    }
+
+    /**
+     * * Executes a Callback.
      * @param {string} name
      * @param {object} [params={}]
      * @throws {Error}
@@ -80,6 +108,23 @@ export default class Methods {
         this[name].execute({
             ...params,
         });
+    }
+
+    /**
+     * * Returns a Callback.
+     * @param {string} name
+     * @throws {Error}
+     * @returns {object}
+     * @memberof Methods
+     */
+    get (name) {
+        if (!name) throw new Error('Callback name is required');
+
+        if (!name instanceof String) throw new Error('Callback name must be a string');
+
+        if (!this.has(name)) return undefined;
+
+        return this[name];
     }
 
     /**
@@ -115,9 +160,7 @@ export default class Methods {
         if (name == undefined) throw new Error('Callback name is required');
 
         if (Array.isArray(name)) {
-            for (const callback of name) {
-                this.remove(callback);
-            }
+            for (const callback of name) this.remove(callback);
 
             return;
         }
@@ -127,39 +170,5 @@ export default class Methods {
         if (this.has(name)) throw new Error('Callback does not exist');
 
         delete this[name];
-    }
-
-    /**
-     * * Set a Callback.
-     * @param {array|object|string} name
-     * @param {object} [value=null]
-     * @param {function} [value.function]
-     * @param {object} [value.params]
-     * @throws {Error}
-     * @returns
-     * @memberof Methods
-     */
-    set (name, value = null) {
-        if (!name) throw new Error('Callback name is required');
-
-        if (Array.isArray(name)) {
-            for (const callback of name) {
-                if (!callback instanceof String) {
-                    if (!this.set(...callback)) return false;
-                } else {
-                    if (!this.set(callback)) return false;
-                }
-            }
-
-            return;
-        } else if (name instanceof Object) {
-            for (const callbackName in name) {
-                if (Object.hasOwnProperty.call(name, callbackName)) this.set(callbackName, name[callbackName]);
-            }
-
-            return;
-        }
-
-        this[name] = new Callback(value);
     }
 }
