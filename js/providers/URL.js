@@ -54,6 +54,17 @@ export default class URL extends Class {
     }
 
     /**
+     * * Returns the URL href.
+     * @static
+     * @param {string} [route=window.location.href]
+     * @returns {string}
+     * @memberof URL
+     */
+    static href (route = window.location.href) {
+        return route;
+    }
+
+    /**
      * * Returns the URL origin.
      * @static
      * @param {string} [route=window.location.href]
@@ -75,15 +86,17 @@ export default class URL extends Class {
     static params (name = false, route = window.location.href) {
         let result = [];
 
-        for (let param of route.split('?').pop().split('&')) {
-            param = {
-                key: param.split('=').shift(),
-                value: param.split('=').pop()
-            };
+        if (/\?/.exec(route)) {
+            for (let param of route.split('?').pop().split('&')) {
+                param = {
+                    key: param.split('=').shift(),
+                    value: param.split('=').pop()
+                };
 
-            if (name && param.key == name) return param.value;
-                
-            result.push(param);
+                if (name && param.key == name) return param.value;
+                    
+                result.push(param);
+            }
         }
 
         if (name) return false;
