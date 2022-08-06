@@ -36,7 +36,7 @@ export default class URL extends Class {
      */
     static hash (route = window.location.href) {
         let hash = /#/
-        
+
         if (!hash.exec(route)) return false;
 
         return route.split('#').pop().split('?').shift();
@@ -128,5 +128,43 @@ export default class URL extends Class {
      */
     static protocol (route = window.location.href) {
         return route.split('//').shift();
+    }
+
+    /**
+     * * Add the "hashchange" event listener to the window.
+     * @static
+     * @param {string} hash
+     * @param {object} callbacks
+     * @param {object} close
+     * @param {function} close.function
+     * @param {object} close.params
+     * @param {object} open
+     * @param {function} open.function
+     * @param {object} open.params
+     * @memberof URL
+     */
+    static watch (hash, callbacks = {
+        close: {
+            function: params => { /* console.log(params); */},
+            params: {},
+        },
+        open: {
+            function: params => { /* console.log(params); */},
+            params: {},
+        },
+    }) {
+        window.addEventListener("hashchange", event => {
+            if (URL.hash() == hash) {
+                callbacks.open.function({
+                    ...(callbacks.open.hasOwnProperty('params') ? callbacks.open.params : {}),
+                    hash: URL.hash(),
+                });
+            } else {
+                callbacks.close.function({
+                    ...(callbacks.open.hasOwnProperty('params') ? callbacks.open.params : {}),
+                    hash: URL.hash(),
+                });
+            }
+        });
     }
 }
